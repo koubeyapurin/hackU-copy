@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>だりぃToDo</title>
+    <link rel="stylesheet" href="static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding-top: 78px;
+            font-family: sans-serif;
+        }
+
+        header {
+            background-color: #2e7d32;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+        }
+
+        header h1 {
+            margin: 0;
+            color: white;
+        }
+
+        header a {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: #2e7d32;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .sidebar {
+            background-color: #a5d6a7;
+            width: 200px;
+            height: 100vh;
+            position: fixed;
+            top: 75px;
+            left: 0;
+            padding-top: 20px;
+            z-index: 998;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .sidebar a.active {
+            background-color: white;
+            color: #2e7d32;
+        }
+
+        .sidebar a:hover {
+            background-color: #81c784;
+        }
+
+        .content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+
+        .header-title-group {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .header-title-group h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .header-title-group .subtitle {
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        label {
+            display: block;
+            margin-top: 1.2em;
+            font-weight: bold;
+        }
+
+        button, input, select {
+            font-size: 1rem;
+            padding: 0.7em;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 60px;
+                position: fixed;
+                bottom: 0;
+                top: auto;
+                left: 0;
+                background-color: #a5d6a7;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+                padding: 0;
+                z-index: 1000;
+            }
+
+            .sidebar a {
+                flex: 1;
+                text-align: center;
+                padding: 10px 0;
+                font-size: 1.5rem;
+                color: white;
+                border-radius: 0;
+                margin-bottom: 0;
+            }
+
+            .sidebar a.active {
+                background-color: white;
+                color: #2e7d32;
+            }
+
+            .sidebar a span {
+                display: none;
+            }
+
+            .content {
+                margin-left: 0;
+                padding-bottom: 70px; /* 下部固定メニュー分 */
+            }
+        }
+
+        .task-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .task-box, .timetable-box {
+            border: 2px solid #4CAF50;
+            padding: 15px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 250px;
+        }
+        .timetable-item {
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .timetable-item.p1 { background-color: #f8bbd0; }
+        .timetable-item.p2 { background-color: #fff59d; }
+        .timetable-item.p3 { background-color: #90caf9; }
+        .timetable-item.p4 { background-color: #a5d6a7; }
+        .timetable-item.p5 { background-color: #ce93d8; }
+        .darii-comment {
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            text-align: left;
+        }
+
+        .darii-comment img {
+            height: 150px;
+        }
+
+        .darii-comment .speech-bubble {
+            background: #e0f2f1;
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 3px solid #4CAF50;
+            font-size: 1.2rem;
+            max-width: 400px;
+            word-wrap: break-word;
+        }
+
+        #start-task-btn, .start-btn-remaining {
+            display: block;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        .task-box label {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-title-group">
+            <h1>だりぃTodo</h1>
+            <span class="subtitle">ゆるくて賢い卒業戦略。</span>
+        </div>
+    </header>
+
+    <div class="sidebar">
+        <a href="index.html" class="active">🏠<span> メイン</span></a>
+        <a href="templates/add_task.html">➕<span> 追加</span></a>
+        <a href="templates/setup.html">⚙️<span> 設定</span></a>
+    </div>
+
+    <div class="content">
+        <form method="POST">
+            <div class="darii-comment">
+                <img src="static/darikun.JPEG" alt="だりぃくん">
+                <div class="speech-bubble">
+                    今日も一緒にがんばろうね〜〜。
+                </div>
+            </div>
+
+            <div class="task-section">
+                <div class="task-box">
+                    <h2>今日やること</h2>
+                    <ul>
+                        <li>
+                            <label>
+                                <input type="checkbox" class="delete-on-check" name="task_1">
+                                タスクを追加してください
+                            </label>
+                        </li>
+                    </ul>
+                    <select name="selected_task_id">
+                        <option value="">タスクを選択してください</option>
+                    </select>
+                    <button formaction="#" formmethod="get" id="start-task-btn">▶ 作業開始</button>
+                </div>
+
+                <div class="timetable-box">
+                    <h2>今日の時間割</h2>
+                    <div class="timetable-item p1">1限：時間割を設定してください</div>
+                </div>
+            </div>
+
+            <div class="task-box" style="margin-top: 40px;">
+                <h2>残りのやることリスト</h2>
+                <ul>
+                    <li>
+                        <label>
+                            <input type="checkbox" class="delete-on-check" name="remaining_task_1">
+                            タスクを追加してください
+                        </label>
+                    </li>
+                </ul>
+
+                <select name="selected_remaining_task_id">
+                    <option value="">タスクを選択してください</option>
+                </select>
+                <button formaction="#" formmethod="get" class="start-btn-remaining">
+                    ▶ 作業開始
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+
